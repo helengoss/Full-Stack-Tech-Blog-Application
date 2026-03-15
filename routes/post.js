@@ -1,0 +1,74 @@
+// create a new router
+const app = require("express").Router();
+
+// import the models
+const { Post } = require("../models/index");
+
+// import authentication middleware, this means the delete rout is now protected (I created the folder and file authenticationToken.js)
+const authenticateToken = require("../middleware/authenticateToken");
+
+// Route to add a new post
+app.post("/", async (req, res) => {
+  try {
+    const { title, content, postedBy } = req.body;
+    const post = await Post.create({ title, content, postedBy });
+
+    res.status(201).json(post);
+  } catch (error) {
+    res.status(500).json({ error: "Error adding post" });
+  }
+});
+
+// Route to get all posts
+app.get("/", async (req, res) => {
+  try {
+    const posts = await Post.findAll();
+
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ error: "Error retrieving posts", error });
+  }
+});
+
+app.get("/:id", async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id);
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ error: "Error retrieving post" });
+  }
+});
+
+// Route to update a post
+app.put("/:id", async (req, res) => {
+  try {
+    const { title, content, postedBy } = req.body;
+    const post = await Post.update(
+      { title, content, postedBy },
+      { where: { id: req.params.id } }
+    );
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ error: "Error updating post" });
+  }
+});
+
+// Route to delete a post
+app.delete("/:id", authenticateToken, async (req, res) => {
+  try {
+    const post = await Post.destroy({ where: { id: req.params.id } 
+    });
+
+     if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.json({ message: "Post deleted successfully"});
+
+  } catch (error) {
+    res.status(500).json({ error: "Error deleting post" });
+  }
+});
+
+// export the router
+module.exports = app;
