@@ -78,11 +78,21 @@ function fetchPosts() {
       postsContainer.innerHTML = "";
       posts.forEach((post) => {
         const div = document.createElement("div");
-        div.innerHTML = `<h3>${post.title}</h3><p>${
-          post.content
-        }</p><small>By: ${post.postedBy} on ${new Date(
+        div.classList.add("post");
+
+               // ONLY show delete button if token exists
+        const deleteBtn = token
+          ? `<button class="delete-btn" onclick="deletePost(${post.id})">Delete</button>`
+          : "";
+
+        // this puts the delete button inside the post HTML
+        div.innerHTML = `<h3>${post.title}</h3>
+        <p>${post.content}</p>
+        <small>By: ${post.postedBy} on ${new Date(
           post.createdOn
-        ).toLocaleString()}</small>`;
+        ).toLocaleString()}</small>
+        ${deleteBtn}`;
+
         postsContainer.appendChild(div);
       });
     });
@@ -104,4 +114,24 @@ function createPost() {
       alert("Post created successfully");
       fetchPosts();
     });
+}
+
+// function to delete a post from the database
+function deletePost(id) {
+  fetch(`http://localhost:3001/api/posts/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  })
+    .then((res) => {
+      if (!res.ok) {
+        return res.json().then((data) => {
+          alert(data.message || "Failed to delete post");
+          throw new Error("Delete failed");
+        });
+      }
+
+      // reload posts after deletion
+      fetchPosts();
+    })
+    .catch((error) => console.error("Error deleting post:", error));
 }

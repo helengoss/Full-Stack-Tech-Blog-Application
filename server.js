@@ -31,3 +31,5 @@ app.use(routes);
 sequelize.sync({ force: rebuild }).then(() => {
   app.listen(PORT, () => console.log("Now listening"));
 });
+
+

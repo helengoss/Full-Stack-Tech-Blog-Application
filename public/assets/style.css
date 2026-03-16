@@ -43,6 +43,45 @@ input[type="submit"] {
     font-size: 16px;
 }
 
+.delete-btn {
+  margin-left: 5px; /* space between the text and the button */
+  cursor: pointer;    /* makes it clear it's clickable (changes cursor to a hand) */
+  padding: 2px 4px;         
+  font-size: 0.9rem;        
+  min-width: 0;            
+  width: auto;             
+  box-sizing: border-box; 
+  background: #feff98;
+  color: #000000; 
+  position: absolute; /* lets us place it inside the li */
+  top: 10px;           /* distance from top edge */
+  right: 10px;         /* distance from right edge */  
+}
+
+
+.edit-btn {
+  margin-left: 5px; 
+  cursor: pointer;    
+  padding: 2px 4px;
+  background: #feff98;
+  color: #000000;
+  min-width: 0;             /* removes the browser default min width */
+  width: auto;              /* lets the width fit text + padding */
+  box-sizing: border-box;
+  position: absolute;       /* position relative to li */
+  bottom: 5px;              /* distance from bottom of li */
+  left: 50%;
+  transform: translateX(-50%); /* shift to truly center the button */
+}
+
+.post {
+  position: relative;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  background: white;
+}
+
 .hidden {
     display: none;
 }
