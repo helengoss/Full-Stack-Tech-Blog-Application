@@ -15,7 +15,6 @@ router.get("/me", authMiddleware, async (req, res) => {
 
 // GET the User record
 router.get("/:id", async (req, res) => {
-  console.log("looking for user", req.params.id);
   try {
     const userData = await User.getOne(req.params.id);
 
@@ -73,17 +72,12 @@ router.put("/:id", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const userData = await User.findOne({ where: { username: req.body.username } });
-    console.log("hello world")
     if (!userData) {
       res
         .status(400)
         .json({ message: "Incorrect email or password, please try again" });
       return;
     }
-
-    console.log("=== user.js login route loaded ==="); // to ensure node is running the correct file
-    console.log("Entered password:", req.body.password); // checking the password and hash are working
-    console.log("Stored password in DB:", userData.password);
 
     const validPassword = userData.checkPassword(req.body.password);
 
@@ -97,7 +91,6 @@ router.post("/login", async (req, res) => {
     const token = signToken(userData);
     res.status(200).json({ token, userData });
   } catch (err) {
-    console.log(err);
     res.status(400).json(err);
   }
 });

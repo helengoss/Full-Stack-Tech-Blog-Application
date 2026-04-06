@@ -19,9 +19,7 @@ app.post("/", async (req, res) => {
 // Route to get all posts
 app.get("/", async (req, res) => {
   try {
-    console.log("Getting all categories");
     const categories = await Category.findAll();
-    console.log(categories);
     res.json(categories);
   } catch (error) {
     res.status(500).json({ message: "Error adding categories", error: error });

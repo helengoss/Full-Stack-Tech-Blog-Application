@@ -76,7 +76,7 @@ textarea {
 
 .post-actions {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 8px;
     margin-bottom: 8px;
 }
