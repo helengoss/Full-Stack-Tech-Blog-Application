@@ -2,15 +2,15 @@
 const app = require("express").Router();
 
 // import the models
-const { Post } = require("../models/index");
+const { Post, Category } = require("../models/index");
 
 const { authMiddleware } = require("../utils/auth");
 
 // Route to add a new post
 app.post("/", async (req, res) => {
   try {
-    const { title, content, postedBy } = req.body;
-    const post = await Post.create({ title, content, postedBy });
+    const { title, content, postedBy, categoryId } = req.body;
+    const post = await Post.create({ title, content, postedBy, categoryId: categoryId || null });
 
     res.status(201).json(post);
   } catch (error) {
@@ -18,14 +18,20 @@ app.post("/", async (req, res) => {
   }
 });
 
-// Route to get all posts
+// Route to get all posts, optionally filtered by categoryId
 app.get("/", async (req, res) => {
   try {
-    const posts = await Post.findAll();
-
+    const where = {};
+    if (req.query.categoryId) {
+      where.categoryId = req.query.categoryId;
+    }
+    const posts = await Post.findAll({
+      where,
+      include: [{ model: Category, as: "category" }],
+    });
     res.json(posts);
   } catch (error) {
-    res.status(500).json({ error: "Error retrieving posts", error });
+    res.status(500).json({ error: "Error retrieving posts" });
   }
 });
 
@@ -41,9 +47,9 @@ app.get("/:id", async (req, res) => {
 // Route to update a post
 app.put("/:id", async (req, res) => {
   try {
-    const { title, content, postedBy } = req.body;
+    const { title, content, postedBy, categoryId } = req.body;
     const post = await Post.update(
-      { title, content, postedBy },
+      { title, content, postedBy, categoryId: categoryId || null },
       { where: { id: req.params.id } }
     );
     res.json(post);

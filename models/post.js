@@ -18,6 +18,10 @@ Post.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    categoryId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     createdOn: {
       type: DataTypes.DATE,
       allowNull: false,

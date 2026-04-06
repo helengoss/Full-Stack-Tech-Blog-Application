@@ -74,6 +74,26 @@ textarea {
     min-height: 90px;
 }
 
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+select {
+    padding: 9px 18px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    background: #7c3aed;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    appearance: none;
+    width: fit-content;
+}
+
 button {
     display: inline-block;
     padding: 9px 18px;
@@ -172,6 +192,17 @@ button:active {
 
 #logout-btn:hover {
     background: #b91c1c;
+}
+
+.category-tag {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: #ede9fe;
+    color: #6d28d9;
+    border-radius: 999px;
 }
 
 .hidden {
