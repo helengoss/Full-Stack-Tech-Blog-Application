@@ -1,4 +1,5 @@
 let token = localStorage.getItem("authToken");
+let currentUser = localStorage.getItem("username");
 
 function register() {
   const username = document.getElementById("username").value;
@@ -35,7 +36,9 @@ function login() {
       // Save the token in the local storage
       if (data.token) {
         localStorage.setItem("authToken", data.token);
+        localStorage.setItem("username", data.userData.username);
         token = data.token;
+        currentUser = data.userData.username;
 
         alert("User Logged In successfully");
 
@@ -61,7 +64,9 @@ function logout() {
   }).then(() => {
     // Clear the token from the local storage as we're now logged out
     localStorage.removeItem("authToken");
+    localStorage.removeItem("username");
     token = null;
+    currentUser = null;
     document.getElementById("auth-container").classList.remove("hidden");
     document.getElementById("app-container").classList.add("hidden");
   });
@@ -113,13 +118,19 @@ function createPost() {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ title, content, postedBy: "User" }),
+    body: JSON.stringify({ title, content, postedBy: currentUser }),
   })
-    .then((res) => res.json())
-    .then(() => {
-      alert("Post created successfully");
+    .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if (!ok) {
+        alert(data.error || "Failed to create post");
+        return;
+      }
+      document.getElementById("post-title").value = "";
+      document.getElementById("post-content").value = "";
       fetchPosts();
-    });
+    })
+    .catch((error) => console.error("Error creating post:", error));
 }
 
 function editPost(id) {
