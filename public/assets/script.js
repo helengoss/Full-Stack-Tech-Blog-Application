@@ -79,19 +79,25 @@ function fetchPosts() {
       posts.forEach((post) => {
         const div = document.createElement("div");
         div.classList.add("post");
+        div.dataset.id = post.id;
+        div.dataset.title = post.title;
+        div.dataset.content = post.content;
+        div.dataset.postedBy = post.postedBy;
 
-               // ONLY show delete button if token exists
         const deleteBtn = token
-          ? `<button class="delete-btn" onclick="deletePost(${post.id})">Delete</button>`
+          ? `<button class="delete-btn" onclick="deletePost(${post.id})">×</button>`
           : "";
 
-        // this puts the delete button inside the post HTML
+        const editBtn = token
+          ? `<button class="edit-btn" onclick="editPost(${post.id})">Edit</button>`
+          : "";
+
         div.innerHTML = `<h3>${post.title}</h3>
         <p>${post.content}</p>
         <small>By: ${post.postedBy} on ${new Date(
           post.createdOn
         ).toLocaleString()}</small>
-        ${deleteBtn}`;
+        ${deleteBtn}${editBtn}`;
 
         postsContainer.appendChild(div);
       });
@@ -114,6 +120,40 @@ function createPost() {
       alert("Post created successfully");
       fetchPosts();
     });
+}
+
+function editPost(id) {
+  const div = document.querySelector(`.post[data-id="${id}"]`);
+  const { title, content, postedBy } = div.dataset;
+
+  div.innerHTML = `
+    <input type="text" id="edit-title-${id}">
+    <textarea id="edit-content-${id}"></textarea>
+    <button class="edit-btn" onclick="savePost(${id})">Save</button>
+    <button class="delete-btn" style="position:static;margin-left:8px;" onclick="fetchPosts()">Cancel</button>
+  `;
+
+  document.getElementById(`edit-title-${id}`).value = title;
+  document.getElementById(`edit-content-${id}`).value = content;
+}
+
+function savePost(id) {
+  const div = document.querySelector(`.post[data-id="${id}"]`);
+  const title = document.getElementById(`edit-title-${id}`).value;
+  const content = document.getElementById(`edit-content-${id}`).value;
+  const postedBy = div.dataset.postedBy;
+
+  fetch(`http://localhost:3001/api/posts/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ title, content, postedBy }),
+  })
+    .then((res) => res.json())
+    .then(() => fetchPosts())
+    .catch((error) => console.error("Error saving post:", error));
 }
 
 // function to delete a post from the database
