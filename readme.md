@@ -133,11 +133,11 @@ quit;
 
 5. Click **Deploy**
 
-Once deployed, add your live Render URL here: `https://your-app.onrender.com`
+live Render site: `https://full-stack-tech-blog-application-6g76.onrender.com/`
 
 ### GitHub Repository
 
-Add your GitHub repo link here: `https://github.com/your-username/your-repo`
+GitHub repo: `https://github.com/helengoss/Full-Stack-Tech-Blog-Application`
 
 ---
 
