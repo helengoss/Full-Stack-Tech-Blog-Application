@@ -5,7 +5,7 @@ function register() {
   const username = document.getElementById("username").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-  fetch("http://localhost:3001/api/users", {
+  fetch("/api/users", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, email, password }),
@@ -26,7 +26,7 @@ function register() {
 function login() {
   const username = document.getElementById("login-email").value;
   const password = document.getElementById("login-password").value;
-  fetch("http://localhost:3001/api/users/login", {
+  fetch("/api/users/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
@@ -59,7 +59,7 @@ function login() {
 }
 
 function logout() {
-  fetch("http://localhost:3001/api/users/logout", {
+  fetch("/api/users/logout", {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
   }).then(() => {
@@ -74,7 +74,7 @@ function logout() {
 }
 
 function loadCategories() {
-  fetch("http://localhost:3001/api/categories", {
+  fetch("/api/categories", {
     headers: { Authorization: `Bearer ${token}` },
   })
     .then((res) => res.json())
@@ -92,7 +92,7 @@ function loadCategories() {
 }
 
 function fetchPosts(filterCategoryName) {
-  let url = "http://localhost:3001/api/posts";
+  let url = "/api/posts";
   if (filterCategoryName) {
     // find the category id from the dropdown options
     const select = document.getElementById("post-category");
@@ -149,7 +149,7 @@ function createPost() {
   const title = document.getElementById("post-title").value;
   const content = document.getElementById("post-content").value;
   const categoryId = document.getElementById("post-category").value || null;
-  fetch("http://localhost:3001/api/posts", {
+  fetch("/api/posts", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -199,7 +199,7 @@ function savePost(id) {
   const postedBy = div.dataset.postedBy;
   const categoryId = document.getElementById(`edit-category-${id}`).value || null;
 
-  fetch(`http://localhost:3001/api/posts/${id}`, {
+  fetch(`/api/posts/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -214,7 +214,7 @@ function savePost(id) {
 
 // function to delete a post from the database
 function deletePost(id) {
-  fetch(`http://localhost:3001/api/posts/${id}`, {
+  fetch(`/api/posts/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   })
